@@ -306,6 +306,13 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   padding-inline: var(--gutter);
   padding-block: clamp(3rem, 8vh, 7rem);
   padding-top: calc(var(--nav-h) + 2rem);
+  padding-bottom: clamp(7rem, 14vh, 8rem); /* clear the absolute scroll-hint at the bottom */
+}
+@media (max-width: 768px) {
+  .hero__inner { padding-bottom: 7.5rem; }
+  .scroll-hint { bottom: 1.25rem; }
+  .scroll-hint__label { font-size: 0.65rem; }
+  .scroll-hint__arrow { width: 22px; height: 22px; }
 }
 .hero__content { max-width: 60ch; }
 .hero__eyebrow { color: var(--gold-300); }

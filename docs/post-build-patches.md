@@ -55,25 +55,19 @@ Bottom bar carries the registered name in caps, company number, and registered o
 | Cloudflare DNS — apex AAAA records | ✅ | 4 × AAAA → 2606:50c0:8000–8003::153, DNS-only |
 | Cloudflare DNS — `www` CNAME | ✅ | `www` → `waseemilyas.github.io`, DNS-only |
 | Cloudflare proxy flip to orange | ⏳ | Optional. Keep DNS-only unless you want CF caching/WAF. If flipped, SSL mode must be **Full (strict)** to avoid loops with GH Pages. |
-| Cloudflare Email Routing | ❌ | Token doesn't have email scope — see §6 below for the dashboard walkthrough. |
+| Cloudflare Email Routing | ✅ | Configured manually in dashboard: `info@soul-trip.uk` → `waseem@automancer.uk`. |
 | Lighthouse mobile (perf ≥90, a11y ≥95) | ❌ | Run from Chrome DevTools or PageSpeed Insights once you've eyeballed the live site. |
 | Test enquiry form end-to-end | ⏳ | Probe POST returned `{"ok":true}`; recommend one real test from the live page. |
 
 ### Known minor caveats
 
-- `https://www.soul-trip.uk` will TLS-fail because GitHub's cert covers only `soul-trip.uk`, not `www`. `http://www.soul-trip.uk` correctly 301s to apex, so most users won't notice. Mention to fix: add www explicitly in Pages custom-domain config and verify — GH then provisions a cert that covers both.
+- `https://www.soul-trip.uk` still TLS-fails — the apex cert (issued at 17:02 UTC, 2026-05-28) was provisioned **before** the `www` CNAME existed, so the SAN covers `soul-trip.uk` only. Cycled the cname off/on to nudge GH to re-issue; their cert pipeline can take up to 24 h. If a faster fix is wanted, verify the domain at https://github.com/settings/pages — that unlocks immediate re-issuance covering both apex + www.
 
-## 6. ❌ Cloudflare Email Routing — manual setup needed
+## 6. ✅ Cloudflare Email Routing — done
 
-The DNS-scoped token I have can't enable Email Routing. ~5 min in the dashboard:
+Configured manually in the Cloudflare dashboard. `info@soul-trip.uk` → `waseem@automancer.uk`.
 
-1. Cloudflare → soul-trip.uk → **Email** → **Email Routing** → **Get Started**.
-2. Enable — Cloudflare auto-adds the required MX records on the zone.
-3. Under **Destination addresses**, add `waseem@automancer.uk`. Cloudflare emails that address with a verification link — click it once.
-4. Under **Routes**, add a **Custom address**: `info` (the local part) → forwards to `waseem@automancer.uk`.
-5. (Optional) Add a **Catch-all** routing rule → `waseem@automancer.uk` so misspellings still reach you.
-
-When Talib's Zoho mailbox is ready, swap routing to forward to that address instead, or migrate MX records over to Zoho directly.
+When Talib's Zoho mailbox is ready, swap the routing destination to that address, or migrate MX records over to Zoho directly.
 
 ---
 
