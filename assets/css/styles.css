@@ -879,11 +879,21 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .footer__bottom {
   border-top: 1px solid rgba(246, 239, 226, 0.14);
   padding-block: 1.75rem;
+  padding-inline: var(--gutter);
   text-align: center;
   font-size: 0.85rem;
   color: rgba(246, 239, 226, 0.6);
 }
-.footer__bottom em { font-style: italic; display: block; margin-top: 0.35rem; }
+.footer__bottom p { margin: 0; }
+.footer__bottom em { font-style: italic; }
+.footer__legal {
+  max-width: 70ch;
+  margin: 0.75rem auto 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: rgba(246, 239, 226, 0.45);
+}
+.footer__legal strong { color: rgba(246, 239, 226, 0.7); font-weight: 600; }
 
 /* ============================================================
    Floating WhatsApp
