@@ -21,6 +21,25 @@ Fetched: 2026-05-28
 - **79120** — Tour operator activities
 - **96090** — Other service activities not elsewhere classified
 
+## Domain & hosting
+
+| Field | Value |
+|---|---|
+| Primary domain | **soul-trip.uk** |
+| Registrar | Cloudflare (Automancer account) |
+| DNS | Cloudflare |
+| Hosting target | GitHub Pages (custom domain via `CNAME` file + DNS records) |
+| Canonical URL | `https://soul-trip.uk/` |
+| Suggested email | `info@soul-trip.uk` (mailbox to be set up; can route via Cloudflare Email Routing → personal inbox at zero cost) |
+
+### DNS records to add at deploy time
+For GitHub Pages on an apex domain (`soul-trip.uk`):
+- **A** records pointing to GitHub Pages: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
+- **AAAA** records: `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153`
+- **CNAME** `www` → `<github-username>.github.io`
+- Cloudflare proxy: leave **DNS-only (grey cloud)** for the apex records during initial certificate provisioning, then can be flipped to proxied (orange cloud) once GitHub issues the TLS cert.
+- Add a `CNAME` file at the repo root containing `soul-trip.uk` (single line, no scheme).
+
 ## Compliance dates
 
 - First accounts due: **10 August 2027** (period to 30 November 2026)
@@ -43,5 +62,5 @@ These belong in the **footer bottom bar** of the site. The brand wordmark elsewh
 
 ### Open items
 - Director(s) name(s) not yet captured from Companies House (officers page).
-- Domain name — in progress.
 - ATOL / ABTA membership status — required if the company sells flights or packaged holidays. Confirm before the site goes live and add the relevant logos + numbers to the footer if applicable.
+- `info@soul-trip.uk` mailbox: configure via Cloudflare Email Routing once the site is live (free, forwards to a personal inbox).
