@@ -24,10 +24,10 @@ Applied in commit on `index.html` and `assets/css/styles.css`.
 | Placeholder | Status | Value |
 |---|---|---|
 | `info@soultrip.[TBC]` | ✅ replaced | `info@soul-trip.uk` |
-| Phone `+44 [TBC]` | ❌ TBC | client to provide |
-| WhatsApp `+44 [TBC]` | ❌ TBC | client to provide |
-| `https://wa.me/[TBC]` | ❌ TBC | client to provide |
-| Social handles `[TBC]` | ❌ TBC | Instagram / Facebook / LinkedIn handles |
+| Phone `+44 [TBC]` | ✅ baked in | `+44 7577 177172` |
+| WhatsApp `+44 [TBC]` | ✅ baked in | `+44 7577 177172` (same as phone) |
+| `https://wa.me/[TBC]` | ✅ replaced | `https://wa.me/447577177172` |
+| Social handles `[TBC]` | ⏳ row hidden | HTML-commented in footer until handles arrive |
 
 ## 4. ❌ Formspree
 
@@ -57,12 +57,11 @@ Applied in commit on `index.html` and `assets/css/styles.css`.
 
 ## What I still need from you
 
-1. **GitHub username + chosen repo name** (e.g. `waseem-ilyas/soul-trip-website`). Public or private?
-2. **Phone number** + **WhatsApp number** (separate or same)
-3. **Social handles** for Instagram, Facebook, LinkedIn (or confirm we drop the icons that aren't applicable)
-4. **Formspree form ID** (or confirm you want me to walk you through creating one, or want an alternative like Cloudflare Workers)
-5. **Inbox to route `info@soul-trip.uk` to** (your personal email)
-6. **ATOL / ABTA membership** status — only relevant if you'll sell flights / packaged holidays
+1. **Repo name** (username confirmed: `waseemilyas`, public). Suggest `soul-trip-website` or `soul-trip.uk`.
+2. **Social handles** for Instagram / Facebook / LinkedIn when ready (row is currently hidden in the footer).
+3. **Formspree form ID** (or confirm an alternative — Cloudflare Workers is plausible if you'd rather no third party).
+4. **Destination inbox** for `info@soul-trip.uk` (your personal email — used for Cloudflare Email Routing).
+5. **ATOL / ABTA membership** status — only relevant if you'll sell flights / packaged holidays.
 
 ## Security note
 

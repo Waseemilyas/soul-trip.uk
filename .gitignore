@@ -1,1 +1,15 @@
 .DS_Store
+
+# Secrets — never commit
+.env
+.env.*
+*.env
+secrets.json
+
+# Editor / IDE
+.idea/
+.vscode/
+
+# Build artefacts (none today, here for safety)
+node_modules/
+dist/
