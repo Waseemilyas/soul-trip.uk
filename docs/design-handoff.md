@@ -341,9 +341,12 @@ Column 3 — Contact:
 - WhatsApp: `+44 [TBC]`
 - Social: Instagram `[TBC]`, Facebook `[TBC]`, LinkedIn `[TBC]` (icon row)
 
-Bottom bar (centred, smaller text):
-> © 2026 SoulTrip Travel and Tours Ltd. All rights reserved.
-> *Trusted UK & Saudi-based travel specialists.*
+Bottom bar (centred, smaller text, two lines):
+> © 2026 Soul Trip Travel and Tours Ltd. All rights reserved. · *Trusted UK & Saudi-based travel specialists.*
+>
+> SOUL TRIP TRAVEL AND TOURS LTD is a company registered in England & Wales. Company number **16843871**. Registered office: 71-75 Shelton Street, Covent Garden, London, WC2H 9JQ.
+
+*(The second line is a legal disclosure required by the Companies (Trading Disclosures) Regulations 2008 and Companies Act 2006 s.82 — keep the registered name in caps, exactly as shown, and do not omit the company number or registered office.)*
 
 ### 4.14 Floating WhatsApp button
 
