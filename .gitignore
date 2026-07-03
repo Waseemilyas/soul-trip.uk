@@ -11,6 +11,11 @@ secrets.json
 .idea/
 .vscode/
 
+# Local/private project context
+.omc/
+.docs/
+docs/
+
 # Build artefacts (none today, here for safety)
 node_modules/
 dist/
