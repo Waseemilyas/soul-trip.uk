@@ -518,6 +518,18 @@
     <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 3C9 3 3.3 8.7 3.3 15.7c0 2.5.7 4.8 1.9 6.8L3 29l6.7-2.1c1.9 1 4 1.6 6.3 1.6 7 0 12.7-5.7 12.7-12.7C28.7 8.7 23 3 16 3zm0 23c-2 0-3.9-.5-5.5-1.5l-.4-.2-3.9 1.2 1.3-3.8-.3-.4A10.3 10.3 0 0 1 5.7 15.7C5.7 10 10.3 5.4 16 5.4S26.3 10 26.3 15.7 21.7 26 16 26zm5.7-7.7c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.5-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.6l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.2 3.4 5.3 4.7.7.3 1.3.5 1.8.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.2-.6-.4z"/></svg>
   </a>
 
+  <!--
+    The DSN is intentionally blank in source. The production release process
+    injects the public browser-ingest DSN from BWS; without it this SDK remains
+    inert. Never put a Sentry auth token in this page.
+  -->
+  <script
+    id="sentry-sdk"
+    src="https://browser.sentry-cdn.com/10.66.0/bundle.min.js"
+    integrity="sha384-rtwsnRY5j8smljaOw72wBKVSXCYaWu7dWy/6NH+Iy0524oU2b5VpFHc83FOev09R"
+    crossorigin="anonymous"
+    data-dsn=""></script>
+  <script src="assets/js/sentry-init.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 </html>
