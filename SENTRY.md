@@ -17,6 +17,6 @@ Production monitoring is active. `#sentry-sdk[data-dsn]` holds the public browse
 1. The JavaScript / Browser production project has its error alert routed to Waseem's Automancer inbox, where the normal Magnus ingestion path processes it.
 2. Keep the public DSN in BWS as `STW1_SENTRY_WEB_DSN`. No Sentry release/auth token is required because there are no source maps or build step.
 3. Any DSN change remains a separately approved production release. Change only the public DSN; do not add a token or contact data to the page.
-4. Run `node scripts/check-sentry-integration.mjs --expect-inert` against a pre-release candidate and `node scripts/check-sentry-integration.mjs` after activation. For an approved DSN change, capture one controlled first-party exception, verify its redaction and alert/inbox ingestion, then resolve or remove the test artefact.
+4. Run `node scripts/check-sentry-integration.mjs` to verify the active release. Use `--expect-inert` only with a deliberate local/CI regression fixture whose `data-dsn` is blank; do not change the released page merely to exercise that mode. For an approved DSN change, capture one controlled first-party exception, verify its redaction and alert/inbox ingestion, then resolve or remove the test artefact.
 
 The source contains no source maps; keep it that way unless a future build pipeline adds hidden-map upload with a build-only token and independent review.

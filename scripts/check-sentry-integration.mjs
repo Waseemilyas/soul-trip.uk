@@ -54,7 +54,7 @@ if (mode === "--expect-inert" && dsn) {
 
 if (mode === "--expect-active") {
   if (!dsn) throw new Error("Expected an active production browser DSN, but none was present.");
-  if (!/^https:\/\/[^@/]+@o\d+\.ingest(?:\.[a-z0-9-]+)*\.sentry\.io\/\d+$/i.test(dsn)) {
+  if (!/^https:\/\/[^@/:]+@o\d+\.ingest(?:\.[a-z0-9-]+)*\.sentry\.io\/\d+$/i.test(dsn)) {
     throw new Error("The active Sentry DSN is not a valid browser ingest DSN.");
   }
 }

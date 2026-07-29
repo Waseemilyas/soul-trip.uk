@@ -1,9 +1,10 @@
 /*
  * Production browser-error detection for Soul Trip.
  *
- * This is deliberately inert until a production release injects the public
- * browser ingest DSN into #sentry-sdk[data-dsn]. Keep the auth token out of
- * the browser and do not add tracing, replay, breadcrumbs, or user data.
+ * The released page supplies the public browser ingest DSN in
+ * #sentry-sdk[data-dsn]. A missing DSN keeps this fail-safe guard inert.
+ * Keep the auth token out of the browser and do not add tracing, replay,
+ * breadcrumbs, or user data.
  */
 (function () {
   "use strict";
