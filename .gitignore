@@ -20,3 +20,11 @@ docs/
 # Build artefacts (none today, here for safety)
 node_modules/
 dist/
+
+# Agent/internal context — must never be published by GitHub Pages
+AGENTS.md
+CLAUDE.md
+AGENTS.local.md
+CLAUDE.local.md
+*.local.md
+SENTRY.md
