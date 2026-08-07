@@ -9,6 +9,9 @@
   --emerald-700: #14573F;
   --gold-500: #C9A24B;
   --gold-300: #E6CB85;
+  /* Darker gold for text on light surfaces (AA: 5.3:1 on sand-100, 4.6:1 on sand-200).
+     gold-500/300 stay for decorative strokes, fills and dark-surface text. */
+  --gold-700: #7A5F18;
   --sand-100: #F6EFE2;
   --sand-200: #EADFC8;
   --ink-900: #1A1A1A;
@@ -80,17 +83,9 @@ ul { margin: 0; padding: 0; list-style: none; }
   font-style: italic;
   font-size: 1.25rem;
   letter-spacing: 0.04em;
-  color: var(--gold-500);
+  color: var(--gold-700);
   margin: 0 0 0.6rem;
   display: block;
-}
-.eyebrow--caps {
-  font-family: var(--font-body);
-  font-style: normal;
-  font-size: 0.8125rem;
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
-  font-weight: 600;
 }
 .eyebrow--light { color: var(--gold-300); }
 
@@ -101,7 +96,14 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   letter-spacing: -0.01em;
   text-wrap: balance;
 }
-.lead { font-size: 1.125rem; color: var(--ink-600); }
+
+/* Breathing room between a heading and the body copy that follows it
+   (margins collapse where a section-head already provides the gap). */
+.about__body,
+.hajj__body,
+.partners__body,
+.vision__body,
+.commit__body { margin-top: clamp(1.1rem, 2vw, 1.5rem); }
 
 /* ---------- Layout ---------- */
 .wrap {
@@ -133,9 +135,6 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 }
 .divider::after { background: linear-gradient(90deg, var(--gold-500), transparent); }
 .divider svg { width: 38px; height: 38px; color: var(--gold-500); flex: none; }
-.divider--light::before { background: linear-gradient(90deg, transparent, var(--gold-300)); }
-.divider--light::after { background: linear-gradient(90deg, var(--gold-300), transparent); }
-.divider--light svg { color: var(--gold-300); }
 
 /* ---------- Buttons ---------- */
 .btn {
@@ -158,17 +157,16 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   box-shadow: 0 10px 26px rgba(201, 162, 75, 0.32);
 }
 .btn--gold:hover { background: var(--gold-300); transform: translateY(-2px); }
-.btn--emerald {
-  background: var(--emerald-900);
-  color: var(--white);
-}
-.btn--emerald:hover { background: var(--emerald-700); transform: translateY(-2px); }
+/* Gold focus ring vanishes on a gold fill — use emerald there instead. */
+.btn--gold:focus-visible { outline-color: var(--emerald-900); }
 .btn--ghost {
   background: transparent;
   color: var(--white);
   border-color: rgba(255, 255, 255, 0.6);
 }
 .btn--ghost:hover { background: rgba(255, 255, 255, 0.12); border-color: var(--white); }
+.btn:active { transform: translateY(0); }
+.btn:disabled { opacity: 0.7; cursor: progress; transform: none; box-shadow: none; }
 .btn--block { width: 100%; }
 
 /* ============================================================
@@ -579,7 +577,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 }
 .vrail-item {
   position: relative;
-  border-radius: 14px;
+  border-radius: var(--radius-card);
   overflow: hidden;
   aspect-ratio: 3 / 4;
   box-shadow: var(--shadow-card);
@@ -757,7 +755,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 }
 .enquiry__sub { color: var(--ink-600); font-size: 1.125rem; max-width: 42ch; }
 .contact-strip { margin-top: 2.25rem; display: grid; gap: 1.1rem; }
-.contact-item { display: flex; align-items: center; gap: 0.9rem; }
+.contact-item { display: flex; align-items: center; gap: 0.9rem; border-radius: 12px; }
 .contact-item__icon {
   width: 44px; height: 44px;
   flex: none;
@@ -766,10 +764,14 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   border: 1px solid var(--sand-200);
   border-radius: 50%;
   box-shadow: var(--shadow-soft);
+  transition: border-color 0.2s ease, transform 0.2s ease;
 }
+.contact-item:hover .contact-item__icon,
+.contact-item:focus-visible .contact-item__icon { border-color: var(--gold-500); transform: translateY(-2px); }
 .contact-item__icon svg { width: 20px; height: 20px; color: var(--gold-500); stroke-width: 1.7; }
 .contact-item__label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-600); }
-.contact-item__value { font-weight: 600; color: var(--emerald-900); }
+.contact-item__value { font-weight: 600; color: var(--emerald-900); transition: color 0.2s ease; }
+.contact-item:hover .contact-item__value { color: var(--emerald-700); }
 
 .form-card {
   background: var(--white);
@@ -786,7 +788,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .field { display: flex; flex-direction: column; gap: 0.45rem; }
 .field--full { grid-column: 1 / -1; }
 .field label { font-size: 0.85rem; font-weight: 600; color: var(--emerald-900); letter-spacing: 0.01em; }
-.field label .req { color: var(--gold-500); }
+.field label .req { color: var(--gold-700); }
 .field input,
 .field select,
 .field textarea {
@@ -801,7 +803,8 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   width: 100%;
 }
 .field textarea { resize: vertical; min-height: 120px; }
-.field input::placeholder, .field textarea::placeholder { color: #9a9488; }
+/* Placeholder at AA contrast against the sand-100 field background */
+.field input::placeholder, .field textarea::placeholder { color: #6E695D; }
 .field input:focus,
 .field select:focus,
 .field textarea:focus {
@@ -857,7 +860,12 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
 }
+.form-success .wa-inline:hover { color: var(--emerald-900); text-decoration-color: var(--gold-500); }
 .form-success .wa-inline svg { width: 20px; height: 20px; }
 
 /* ============================================================
@@ -891,10 +899,11 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   margin: 0 0 1.25rem;
   font-weight: 600;
 }
-.footer__links li { margin-bottom: 0.7rem; }
+.footer__links li { margin-bottom: 0.85rem; }
 .footer__links a { color: rgba(246, 239, 226, 0.82); transition: color 0.2s ease; }
 .footer__links a:hover { color: var(--gold-300); }
-.footer__contact li { margin-bottom: 0.7rem; color: rgba(246, 239, 226, 0.82); }
+.footer__contact li { margin-bottom: 0.85rem; color: rgba(246, 239, 226, 0.82); }
+.footer__contact a { transition: color 0.2s ease; }
 .footer__contact a:hover { color: var(--gold-300); }
 .social-row { display: flex; gap: 0.75rem; margin-top: 1.25rem; }
 .social-row a {
@@ -924,9 +933,9 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   text-align: center;
   font-size: 0.75rem;
   letter-spacing: 0.02em;
-  color: rgba(246, 239, 226, 0.45);
+  color: rgba(246, 239, 226, 0.7);
 }
-.footer__bottom .footer__legal strong { color: rgba(246, 239, 226, 0.7); font-weight: 600; }
+.footer__bottom .footer__legal strong { color: rgba(246, 239, 226, 0.9); font-weight: 600; }
 
 /* ============================================================
    Floating WhatsApp
@@ -946,6 +955,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .wa-float:hover { transform: scale(1.08); }
+.wa-float:focus-visible { outline-color: var(--emerald-900); transform: scale(1.08); }
 .wa-float svg { width: 30px; height: 30px; }
 .wa-float__tip {
   position: absolute;
@@ -963,7 +973,8 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   pointer-events: none;
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
-.wa-float:hover .wa-float__tip { opacity: 1; transform: translateY(-50%) translateX(0); }
+.wa-float:hover .wa-float__tip,
+.wa-float:focus-visible .wa-float__tip { opacity: 1; transform: translateY(-50%) translateX(0); }
 
 /* ============================================================
    Scroll reveal
@@ -1043,6 +1054,17 @@ html.js-anim .reveal.is-in { opacity: 1; transform: none; }
   .hajj__feats { grid-template-columns: 1fr 1fr; }
   .about__media { aspect-ratio: 16 / 11; }
   .hajj__media { aspect-ratio: 16 / 11; }
+}
+
+@media (min-width: 561px) and (max-width: 768px) {
+  /* Small tablets: trust pills read better two-up than full-width */
+  .why__grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 640px) {
+  .footer__grid { grid-template-columns: 1fr; gap: 2.25rem; }
+  /* Keep the legal block clear of the floating WhatsApp button */
+  .footer__bottom { padding-bottom: 5.5rem; }
 }
 
 @media (max-width: 520px) {
