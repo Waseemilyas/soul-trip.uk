@@ -1,0 +1,9 @@
+{
+  "product": "the Soul Trip website",
+  "audience": "visitors to the site",
+  "tagPrefix": "v",
+  "changelog": "CHANGELOG.md",
+  "productionRef": "main",
+  "publishGithub": true,
+  "glossary": []
+}
