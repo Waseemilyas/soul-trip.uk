@@ -1,7 +1,6 @@
 {
   "algorithm": "sha256",
   "files": {
-    "CNAME": "1afb0a3d33f807eb53764f054e9fdcb1fc8231ae815c7b6edfa3095155b518a0",
     "apple-touch-icon.png": "11915258439a89c18a5976d98faa173ba2d19862f21fe5a345cb93b759cb178b",
     "assets/css/styles.css": "a3276b00d7a13e2a633f9ad11f2f782c79ebd4a3cb60494f10a2d7c7316d4525",
     "assets/js/main.js": "ce8367a2d8bb62e17d7423a6c075f9976b104a085d5211b71dbabd9e89fd4382",
@@ -41,8 +40,8 @@
     "scripts/check-sentry-integration.mjs": "abcb4c07337d0144c8af97cc6c97c80cde660e4b76ee8237cf7b99808b6e470b",
     "scripts/check-site.mjs": "bb18340ff9d6eabb07c4e85f50a212a80d4cef27729a4832c71bdcb8621ff280",
     "scripts/generate-manifest.mjs": "0467d404152b7e9b4491da9924161380f7ca4a4c59ecf3b84ad696feb3cac513",
-    "scripts/site-contract-lib.mjs": "8e459b3c5e80a40e01c863cef7de58e5f09020cdf8ee4f79dcd94b2ab9eb60ee",
-    "scripts/test-negative-controls.mjs": "36c5efffbeb3a045a5553b0c39bf88ccda6592e36f0745db617f71be0a00ec22",
+    "scripts/site-contract-lib.mjs": "ca04a23c4c07d462b10a03d744e82e8e5049f463a35132cd01e520e3f53d156b",
+    "scripts/test-negative-controls.mjs": "c89153dd439713a3f3720b3c05db53687e008de03ba9a073f66bcbd980f8ccdb",
     "scripts/verify-production.mjs": "031d87418f443dc42f36b065a28e0ed37ab2705ab9bb7006ab06fb202e4ae6cd",
     "sitemap.xml": "498f6ecdc4b253762167269fdc7daf3229931f6ed30b452a740b5de71faf266d"
   }

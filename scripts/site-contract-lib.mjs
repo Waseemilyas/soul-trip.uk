@@ -16,8 +16,11 @@ export function isServedPath(relPath) {
 // mutable release ledger, not a runtime dependency of any page: the mandatory
 // release workflow writes it only after the candidate manifest is sealed, so
 // hashing it would force a manifest rewrite on every release and cycle forever.
-// Exact-name matching keeps every other served file fingerprinted.
-export const FINGERPRINT_EXCLUDED_FILES = ["CHANGELOG.md"];
+// CNAME is GitHub Pages deployment metadata: Pages consumes it to bind the
+// custom domain and does not serve it (measured HTTP 404 in production), so a
+// fingerprint entry for it could never be verified against live output.
+// Exact-name matching keeps every other served runtime file fingerprinted.
+export const FINGERPRINT_EXCLUDED_FILES = ["CHANGELOG.md", "CNAME"];
 
 export function isFingerprintExcluded(relPath) {
   return FINGERPRINT_EXCLUDED_FILES.includes(relPath);

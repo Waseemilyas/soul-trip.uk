@@ -310,10 +310,10 @@ await test("T18", "manifest check is green on a faithful copy and fails on tampe
   try {
     const clean = runNode("scripts/check-manifest.mjs", dir, ["--root", dir]);
     if (clean.status !== 0) return { pass: false, evidence: `clean copy failed: exit=${clean.status} ${clean.stderr}` };
-    await writeFile(path.join(dir, "CNAME"), (await readFile(path.join(dir, "CNAME"), "utf8")) + "\n");
+    await writeFile(path.join(dir, "robots.txt"), (await readFile(path.join(dir, "robots.txt"), "utf8")) + "\n");
     const stale = runNode("scripts/check-manifest.mjs", dir, ["--root", dir]);
     return {
-      pass: stale.status === 1 && /does not match manifest/.test(stale.stdout + stale.stderr) && /CNAME/.test(stale.stdout + stale.stderr),
+      pass: stale.status === 1 && /does not match manifest/.test(stale.stdout + stale.stderr) && /robots\.txt/.test(stale.stdout + stale.stderr),
       evidence: `clean exit=${clean.status}, tampered exit=${stale.status}`
     };
   } finally {
@@ -338,10 +338,10 @@ await test("T19", "manifest check fails on an extra untracked served file (ambig
 await test("T20", "manifest check fails when a manifest entry is missing from the file", async () => {
   const dir = await makeCopy("soultrip-negctl-man3-");
   try {
-    await sabotageInCopy(dir, "site-manifest.json", [[/"CNAME": "[0-9a-f]{64}",\n/, ""]]);
+    await sabotageInCopy(dir, "site-manifest.json", [[/"robots\.txt": "[0-9a-f]{64}",\n/, ""]]);
     const r = runNode("scripts/check-manifest.mjs", dir, ["--root", dir]);
     return {
-      pass: r.status === 1 && /"CNAME" is missing from the manifest/.test(r.stdout + r.stderr),
+      pass: r.status === 1 && /"robots\.txt" is missing from the manifest/.test(r.stdout + r.stderr),
       evidence: `exit=${r.status}`
     };
   } finally {
@@ -865,6 +865,67 @@ await test("T44", "hostile: a manifest that still lists CHANGELOG.md fails with 
       pass:
         r.status === 1 &&
         /manifest lists "CHANGELOG\.md" which is excluded from the deploy fingerprint/.test(r.stdout + r.stderr),
+      evidence: `exit=${r.status}`
+    };
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+// CNAME joins CHANGELOG.md in the fingerprint exclusion: GitHub Pages consumes it
+// as deployment metadata for the custom domain and does not serve it (measured
+// HTTP 404), so hashing it would demand an impossible live verification. These
+// controls mirror the ledger-isolation pair above for the domain record.
+
+await test("T45", "deployment-metadata isolation: mutating CNAME alone keeps the fingerprint green and generation a no-op", async () => {
+  const dir = await makeCopy("soultrip-negctl-cname-");
+  try {
+    const before = runNode("scripts/check-manifest.mjs", dir, ["--root", dir]);
+    if (before.status !== 0) return { pass: false, evidence: `baseline copy already stale: exit=${before.status} ${before.stderr}` };
+    await writeFile(
+      path.join(dir, "CNAME"),
+      (await readFile(path.join(dir, "CNAME"), "utf8")) + "\n# hostile fixture edit (test bytes)\n"
+    );
+    const chk = runNode("scripts/check-manifest.mjs", dir, ["--root", dir]);
+    if (chk.status !== 0) return { pass: false, evidence: `CNAME-only edit staled the fingerprint: exit=${chk.status} ${(chk.stdout + chk.stderr).slice(0, 300)}` };
+    const mtimeBefore = (await stat(path.join(dir, "site-manifest.json"))).mtimeMs;
+    const bytesBefore = await readFile(path.join(dir, "site-manifest.json"));
+    await new Promise((r) => setTimeout(r, 20));
+    const gen = runNode("scripts/generate-manifest.mjs", dir, ["--root", dir]);
+    const mtimeAfter = (await stat(path.join(dir, "site-manifest.json"))).mtimeMs;
+    const bytesAfter = await readFile(path.join(dir, "site-manifest.json"));
+    const genOut = gen.stdout + gen.stderr;
+    return {
+      pass:
+        chk.status === 0 &&
+        gen.status === 0 &&
+        /already up to date/.test(genOut) &&
+        bytesBefore.equals(bytesAfter) &&
+        mtimeBefore === mtimeAfter &&
+        !/"CNAME"/.test(await readFile(path.join(dir, "site-manifest.json"), "utf8")),
+      evidence: `checker exit=${chk.status}, generator exit=${gen.status} (${genOut.trim()}), manifest bytes+mtime unchanged=${bytesBefore.equals(bytesAfter) && mtimeBefore === mtimeAfter}`
+    };
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+await test("T46", "hostile: a manifest that still lists CNAME fails with the explicit exclusion diagnostic", async () => {
+  const dir = await makeCopy("soultrip-negctl-cnlist-");
+  try {
+    const raw = await readFile(path.join(dir, "site-manifest.json"), "utf8");
+    const m = JSON.parse(raw);
+    const files = {};
+    for (const [k, v] of Object.entries(m.files)) files[k] = v;
+    files["CNAME"] = createHash("sha256").update(await readFile(path.join(dir, "CNAME"))).digest("hex");
+    const ordered = {};
+    for (const k of Object.keys(m.files).concat("CNAME").sort()) ordered[k] = files[k];
+    await writeFile(path.join(dir, "site-manifest.json"), JSON.stringify({ algorithm: m.algorithm, files: ordered }, null, 2) + "\n");
+    const r = runNode("scripts/check-manifest.mjs", dir, ["--root", dir]);
+    return {
+      pass:
+        r.status === 1 &&
+        /manifest lists "CNAME" which is excluded from the deploy fingerprint/.test(r.stdout + r.stderr),
       evidence: `exit=${r.status}`
     };
   } finally {
