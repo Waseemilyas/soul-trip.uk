@@ -1,0 +1,42 @@
+name: site-contract
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Published-artifact manifest is fresh and canonical (read-only check)
+        run: node scripts/check-manifest.mjs
+
+      - name: Site contract — references, anchors, alts, form wiring, Sentry, WCAG AA tokens, favicon/robots/sitemap refs, structural a11y regressions
+        run: node scripts/check-site.mjs
+
+      - name: Sentry integration — pinned SDK + recomputed SRI vs served bytes + active DSN shape + privacy controls
+        run: node scripts/check-sentry-integration.mjs --expect-active
+
+      - name: Production verifier discriminates previous builds (built-in negative control)
+        run: node scripts/verify-production.mjs --prove-verification
+
+      - name: Negative-control suite — every checker proven able to fail; purity proofs for read-only commands
+        run: node scripts/test-negative-controls.mjs

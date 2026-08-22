@@ -890,7 +890,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   color: var(--gold-300);
   margin-top: 0.75rem;
 }
-.footer h4 {
+.footer h3 {
   font-family: var(--font-body);
   font-size: 0.8rem;
   text-transform: uppercase;

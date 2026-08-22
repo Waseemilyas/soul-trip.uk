@@ -15,7 +15,9 @@
   <meta property="og:url" content="https://soul-trip.uk/" />
 
   <link rel="canonical" href="https://soul-trip.uk/" />
-  <link rel="icon" href="/favicon.ico" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -479,7 +481,7 @@
         </div>
 
         <div>
-          <h4>What We Offer</h4>
+          <h3>What We Offer</h3>
           <ul class="footer__links">
             <li><a href="#hajj-umrah">Hajj &amp; Umrah</a></li>
             <li><a href="#services">Spiritual Retreats</a></li>
@@ -490,7 +492,7 @@
         </div>
 
         <div>
-          <h4>Contact</h4>
+          <h3>Contact</h3>
           <ul class="footer__contact">
             <li><a href="tel:+447577177172">Phone: +44 7577 177172</a></li>
             <li><a href="mailto:info@soul-trip.uk">Email: info@soul-trip.uk</a></li>
@@ -511,13 +513,14 @@
       <p>© 2026 Soul Trip Travel and Tours Ltd. All rights reserved. <em>· Trusted UK &amp; Saudi-based travel specialists.</em></p>
       <p class="footer__legal">SOUL TRIP TRAVEL AND TOURS LTD is a company registered in England &amp; Wales. Company number <strong>16843871</strong>. Registered office: 71-75 Shelton Street, Covent Garden, London, WC2H 9JQ.</p>
     </div>
-  </footer>
 
-  <!-- ===================== FLOATING WHATSAPP ===================== -->
-  <a class="wa-float" href="https://wa.me/447577177172" aria-label="Chat on WhatsApp">
-    <span class="wa-float__tip">Chat on WhatsApp</span>
-    <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 3C9 3 3.3 8.7 3.3 15.7c0 2.5.7 4.8 1.9 6.8L3 29l6.7-2.1c1.9 1 4 1.6 6.3 1.6 7 0 12.7-5.7 12.7-12.7C28.7 8.7 23 3 16 3zm0 23c-2 0-3.9-.5-5.5-1.5l-.4-.2-3.9 1.2 1.3-3.8-.3-.4A10.3 10.3 0 0 1 5.7 15.7C5.7 10 10.3 5.4 16 5.4S26.3 10 26.3 15.7 21.7 26 16 26zm5.7-7.7c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.5-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.6l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.2 3.4 5.3 4.7.7.3 1.3.5 1.8.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.2-.6-.4z"/></svg>
-  </a>
+    <!-- Floating WhatsApp lives inside the footer landmark so no page content sits
+         outside a landmark (axe: region); position: fixed keeps its visual placement. -->
+    <a class="wa-float" href="https://wa.me/447577177172" aria-label="Chat on WhatsApp">
+      <span class="wa-float__tip">Chat on WhatsApp</span>
+      <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 3C9 3 3.3 8.7 3.3 15.7c0 2.5.7 4.8 1.9 6.8L3 29l6.7-2.1c1.9 1 4 1.6 6.3 1.6 7 0 12.7-5.7 12.7-12.7C28.7 8.7 23 3 16 3zm0 23c-2 0-3.9-.5-5.5-1.5l-.4-.2-3.9 1.2 1.3-3.8-.3-.4A10.3 10.3 0 0 1 5.7 15.7C5.7 10 10.3 5.4 16 5.4S26.3 10 26.3 15.7 21.7 26 16 26zm5.7-7.7c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.5-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.6l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.2 3.4 5.3 4.7.7.3 1.3.5 1.8.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.2-.6-.4z"/></svg>
+    </a>
+  </footer>
 
   <!--
     This is the active public browser-ingest DSN, managed under the BWS key
