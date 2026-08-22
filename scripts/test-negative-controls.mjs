@@ -792,6 +792,86 @@ await test("T41", "meta-proof: an always-success no-op checker masks a real viol
   }
 });
 
+// ===== Release-cycle repair additions (T42+) ========================================
+// CHANGELOG.md is excluded from the deploy fingerprint (mutable release ledger,
+// not a runtime dependency). These controls prove the exclusion is not a hole:
+// runtime files must still be unforgeable, and the ledger itself must not stale.
+
+await test("T42", "hostile: a newly tracked runtime file absent from the manifest still fails after the exclusion", async () => {
+  const dir = await makeCopy("soultrip-negctl-extra-");
+  try {
+    await writeFile(path.join(dir, "assets/js/extra-runtime.js"), "// hostile fixture: runtime file smuggled in\n");
+    const add = spawnSync("git", ["add", "assets/js/extra-runtime.js"], { cwd: dir });
+    if (add.status !== 0) return { pass: false, evidence: `git add failed in copy: ${add.stderr}` };
+    const r = runNode("scripts/check-manifest.mjs", dir, ["--root", dir]);
+    const out = r.stdout + r.stderr;
+    return {
+      pass:
+        r.status === 1 &&
+        /served file "assets\/js\/extra-runtime\.js" is missing from the manifest/.test(out),
+      evidence: `exit=${r.status}${r.status === 1 ? " — runtime file outside the manifest still rejected" : ` ${out.slice(0, 200)}`}`
+    };
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+await test("T43", "release-ledger isolation: mutating CHANGELOG.md alone keeps the fingerprint green and generation a no-op", async () => {
+  const dir = await makeCopy("soultrip-negctl-chlog-");
+  try {
+    const before = runNode("scripts/check-manifest.mjs", dir, ["--root", dir]);
+    if (before.status !== 0) return { pass: false, evidence: `baseline copy already stale: exit=${before.status} ${before.stderr}` };
+    await writeFile(
+      path.join(dir, "CHANGELOG.md"),
+      (await readFile(path.join(dir, "CHANGELOG.md"), "utf8")) + "\n## hostile fixture entry (test bytes)\n"
+    );
+    const chk = runNode("scripts/check-manifest.mjs", dir, ["--root", dir]);
+    if (chk.status !== 0) return { pass: false, evidence: `CHANGELOG-only edit staled the fingerprint: exit=${chk.status} ${(chk.stdout + chk.stderr).slice(0, 300)}` };
+    const mtimeBefore = (await stat(path.join(dir, "site-manifest.json"))).mtimeMs;
+    const bytesBefore = await readFile(path.join(dir, "site-manifest.json"));
+    await new Promise((r) => setTimeout(r, 20));
+    const gen = runNode("scripts/generate-manifest.mjs", dir, ["--root", dir]);
+    const mtimeAfter = (await stat(path.join(dir, "site-manifest.json"))).mtimeMs;
+    const bytesAfter = await readFile(path.join(dir, "site-manifest.json"));
+    const genOut = gen.stdout + gen.stderr;
+    return {
+      pass:
+        chk.status === 0 &&
+        gen.status === 0 &&
+        /already up to date/.test(genOut) &&
+        bytesBefore.equals(bytesAfter) &&
+        mtimeBefore === mtimeAfter &&
+        !/"CHANGELOG\.md"/.test(await readFile(path.join(dir, "site-manifest.json"), "utf8")),
+      evidence: `checker exit=${chk.status}, generator exit=${gen.status} (${genOut.trim()}), manifest bytes+mtime unchanged=${bytesBefore.equals(bytesAfter) && mtimeBefore === mtimeAfter}`
+    };
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+await test("T44", "hostile: a manifest that still lists CHANGELOG.md fails with the explicit exclusion diagnostic", async () => {
+  const dir = await makeCopy("soultrip-negctl-chlist-");
+  try {
+    const raw = await readFile(path.join(dir, "site-manifest.json"), "utf8");
+    const m = JSON.parse(raw);
+    const files = {};
+    for (const [k, v] of Object.entries(m.files)) files[k] = v;
+    files["CHANGELOG.md"] = createHash("sha256").update(await readFile(path.join(dir, "CHANGELOG.md"))).digest("hex");
+    const ordered = {};
+    for (const k of Object.keys(m.files).concat("CHANGELOG.md").sort()) ordered[k] = files[k];
+    await writeFile(path.join(dir, "site-manifest.json"), JSON.stringify({ algorithm: m.algorithm, files: ordered }, null, 2) + "\n");
+    const r = runNode("scripts/check-manifest.mjs", dir, ["--root", dir]);
+    return {
+      pass:
+        r.status === 1 &&
+        /manifest lists "CHANGELOG\.md" which is excluded from the deploy fingerprint/.test(r.stdout + r.stderr),
+      evidence: `exit=${r.status}`
+    };
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
 console.log("\nnegative-control suite results:");
 let failures = 0;
 for (const r of results) {

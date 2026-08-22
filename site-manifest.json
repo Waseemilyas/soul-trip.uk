@@ -1,7 +1,6 @@
 {
   "algorithm": "sha256",
   "files": {
-    "CHANGELOG.md": "c2edec5973bf8bd7d01c6c79f84a6aa755e6cee1bded565c3ab3e0e531b05f96",
     "CNAME": "1afb0a3d33f807eb53764f054e9fdcb1fc8231ae815c7b6edfa3095155b518a0",
     "apple-touch-icon.png": "11915258439a89c18a5976d98faa173ba2d19862f21fe5a345cb93b759cb178b",
     "assets/css/styles.css": "a3276b00d7a13e2a633f9ad11f2f782c79ebd4a3cb60494f10a2d7c7316d4525",
@@ -38,12 +37,12 @@
     "images/styleboard/styleboard-09.jpg": "29c57aa7cccea7bdf586103256f1ce2febc6cf9d03fd5d7b7919d0d83ec4439f",
     "index.html": "77b1dad60b0fa220630b678bd04ee9b104d37bbe4cd17d4c040dc5429253bc60",
     "robots.txt": "8ef280707d4f1a427b42061f7dd9c30d5714d877f52fd184c06cfb418128a45d",
-    "scripts/check-manifest.mjs": "2359c4f509260973f81bbbaed361b17b226427af0c3bf37ee05dfbadf8d6c7ca",
+    "scripts/check-manifest.mjs": "926ccdf701ba765f89cca04ac8f2b0d6146de5f1372e74dbc429eea77e96466b",
     "scripts/check-sentry-integration.mjs": "abcb4c07337d0144c8af97cc6c97c80cde660e4b76ee8237cf7b99808b6e470b",
     "scripts/check-site.mjs": "bb18340ff9d6eabb07c4e85f50a212a80d4cef27729a4832c71bdcb8621ff280",
-    "scripts/generate-manifest.mjs": "c4b1704cbfd6e4c3b2d9f7ea335f2ba89660354026b2246c23837fc636474b90",
-    "scripts/site-contract-lib.mjs": "230d394f4d9da1182fafadf5cbebca030a122c16d7cbfb34e5ba63dff3e6f55b",
-    "scripts/test-negative-controls.mjs": "8d10e867c269e8d1ab31a3f10af537bc95c23cc4244b8378daa0075abb83ed79",
+    "scripts/generate-manifest.mjs": "0467d404152b7e9b4491da9924161380f7ca4a4c59ecf3b84ad696feb3cac513",
+    "scripts/site-contract-lib.mjs": "8e459b3c5e80a40e01c863cef7de58e5f09020cdf8ee4f79dcd94b2ab9eb60ee",
+    "scripts/test-negative-controls.mjs": "36c5efffbeb3a045a5553b0c39bf88ccda6592e36f0745db617f71be0a00ec22",
     "scripts/verify-production.mjs": "031d87418f443dc42f36b065a28e0ed37ab2705ab9bb7006ab06fb202e4ae6cd",
     "sitemap.xml": "498f6ecdc4b253762167269fdc7daf3229931f6ed30b452a740b5de71faf266d"
   }

@@ -5,7 +5,8 @@ import {
   repoRoot,
   listIntendedServedFiles,
   listUntrackedNonIgnored,
-  sha256File
+  sha256File,
+  isFingerprintExcluded
 } from "./site-contract-lib.mjs";
 
 export const MANIFEST_NAME = "site-manifest.json";
@@ -30,7 +31,7 @@ export async function buildManifest(root) {
   const served = await listIntendedServedFiles(root);
   const files = {};
   for (const rel of served) {
-    if (rel === MANIFEST_NAME) continue;
+    if (rel === MANIFEST_NAME || isFingerprintExcluded(rel)) continue;
     files[rel] = await sha256File(path.join(root, rel));
   }
   return JSON.stringify({ algorithm: "sha256", files }, null, 2) + "\n";

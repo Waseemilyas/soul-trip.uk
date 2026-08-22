@@ -12,6 +12,17 @@ export function isServedPath(relPath) {
   return !relPath.split("/").some((segment) => segment.startsWith(".") || segment.startsWith("_"));
 }
 
+// Files excluded from the deploy fingerprint by exact name. CHANGELOG.md is the
+// mutable release ledger, not a runtime dependency of any page: the mandatory
+// release workflow writes it only after the candidate manifest is sealed, so
+// hashing it would force a manifest rewrite on every release and cycle forever.
+// Exact-name matching keeps every other served file fingerprinted.
+export const FINGERPRINT_EXCLUDED_FILES = ["CHANGELOG.md"];
+
+export function isFingerprintExcluded(relPath) {
+  return FINGERPRINT_EXCLUDED_FILES.includes(relPath);
+}
+
 export function listTrackedFiles(root) {
   let stdout;
   try {

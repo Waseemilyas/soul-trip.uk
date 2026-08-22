@@ -6,7 +6,8 @@ import {
   listIntendedServedFiles,
   listUntrackedNonIgnored,
   sha256File,
-  isServedPath
+  isServedPath,
+  isFingerprintExcluded
 } from "./site-contract-lib.mjs";
 
 const MANIFEST_NAME = "site-manifest.json";
@@ -23,7 +24,7 @@ const failures = [];
 // list (sorted by git) plus freshly computed digests. The manifest's own byte
 // order is never trusted as a reference.
 const served = await listIntendedServedFiles(root);
-const expectedOrder = served.filter((rel) => rel !== MANIFEST_NAME);
+const expectedOrder = served.filter((rel) => rel !== MANIFEST_NAME && !isFingerprintExcluded(rel));
 
 try {
   let raw;
@@ -70,6 +71,10 @@ try {
     }
   }
   for (const rel of listedKeys) {
+    if (isFingerprintExcluded(rel)) {
+      failures.push(`manifest lists "${rel}" which is excluded from the deploy fingerprint; re-run generate-manifest`);
+      continue;
+    }
     if (!expectedFiles.has(rel)) failures.push(`manifest lists "${rel}" which is not a served tracked file`);
   }
 
