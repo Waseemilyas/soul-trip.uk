@@ -1,5 +1,10 @@
 # Release notes
 
+## v2026.08.22.5 — 22 August 2026
+
+Website updates now reach visitors more reliably after each release.
+
+
 ## v2026.08.22.4 — 22 August 2026
 
 This release improves the clarity and reliability of website updates as the site continues to evolve.
