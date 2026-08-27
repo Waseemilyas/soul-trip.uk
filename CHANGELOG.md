@@ -1,5 +1,10 @@
 # Release notes
 
+## v2026.08.27.1 — 27 August 2026
+
+The Soul Trip website is ready for your next visit.
+
+
 ## v2026.08.22.5 — 22 August 2026
 
 Website updates now reach visitors more reliably after each release.
