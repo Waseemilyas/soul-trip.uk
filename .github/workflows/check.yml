@@ -1,5 +1,22 @@
 name: site-contract
 
+# This workflow both GATES and PUBLISHES soul-trip.uk.
+#
+# It used to only gate. Publishing was GitHub's implicit legacy Pages build,
+# which fires on a push to `main` independently of anything here — so a failed
+# contract check published to the live client site anyway. Observed on
+# 2026-08-22 06:09: the `site-contract` run failed and the
+# `pages-build-deployment` for the same push succeeded and published.
+#
+# The deploy jobs below therefore sit in the SAME workflow as the check and
+# depend on it. A cross-workflow `needs:` does not exist, and a `workflow_run`
+# trigger fires on completion rather than on success, so putting them here is
+# what actually makes the check a gate rather than an opinion.
+#
+# Pages source was switched from "Deploy from a branch" to "GitHub Actions" on
+# 2026-08-27 to make this possible. Reverting that setting silently restores the
+# ungated behaviour above.
+
 on:
   push:
     branches: [main]
@@ -40,3 +57,63 @@ jobs:
 
       - name: Negative-control suite — every checker proven able to fail; purity proofs for read-only commands
         run: node scripts/test-negative-controls.mjs
+
+  # ---------------------------------------------------------------------------
+  # Publish. Only from `main`, only on a push, and only after `verify` is green.
+  # ---------------------------------------------------------------------------
+  build:
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      # The site is hand-written and served from the repository root, which is
+      # exactly what the legacy branch build published. Uploading the root keeps
+      # the public surface byte-identical to what is live today; narrowing it
+      # would be a change to the site, smuggled in as a change to CI.
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # A half-finished deploy must never be cancelled by the next push.
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  verify-production:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      # The repo has always had this verifier. Until now CI only ever ran it
+      # against three hostile fixtures (--prove-verification, in `verify`
+      # above); it had never once been pointed at soul-trip.uk. It fetches the
+      # live manifest, requires it byte-identical to this tree's, then hashes
+      # every one of the served files against it.
+      - name: Production serves this exact tree
+        run: node scripts/verify-production.mjs --base https://soul-trip.uk/ --verbose

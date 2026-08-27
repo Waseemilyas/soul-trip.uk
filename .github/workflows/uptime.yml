@@ -1,0 +1,52 @@
+name: uptime
+
+# Availability signal for soul-trip.uk.
+#
+# This site had none. `docs/sentry-monitoring.md` records that Sentry here
+# captures first-party browser exceptions only and explicitly does not cover
+# server or service failures — so nothing was watching whether the site was
+# actually being served.
+#
+# It runs the same verifier the deploy gate runs, against the same origin, so
+# the two cannot drift: a pass here means production is still serving the exact
+# tree `main` describes, not merely that something answered 200.
+#
+# The absence of a schedule was previously a deliberate decision recorded in
+# `docs/ox-alpha-safety-net-notes.md`. That decision is being reversed
+# knowingly, on Waseem's instruction of 2026-08-27, because the site is
+# client-facing and had no availability signal at all.
+#
+# NOTE ON THE INTERVAL: GitHub's `schedule:` is best-effort, not a guarantee.
+# Another monitor on this estate is configured at */30 and was measured running
+# at 58-minute gaps. Do not quote "every 30 minutes" in a runbook without first
+# measuring the real gaps between consecutive runs.
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: uptime
+  # A check that is mid-verification must never be killed by the next tick;
+  # that turns a real alarm into silence.
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Production serves the tree main describes
+        run: node scripts/verify-production.mjs --base https://soul-trip.uk/
