@@ -24,6 +24,25 @@ else
   fi
 fi
 
+# Site-contract guard. `site-manifest.json` is the published-artifact manifest:
+# edit index.html or any served asset without regenerating it and CI's very
+# first step fails with "manifest is STALE or invalid". That happened on
+# 2026-08-27 (run 33118691742) and it is the one red this repo can produce
+# without anything actually being wrong with the site.
+#
+# Note for anyone tempted to prove this gate works by pushing a knowingly broken
+# commit to main: do not. `scripts/test-negative-controls.mjs` runs in every CI
+# run and already proves every checker here is able to fail. A deliberate red on
+# main costs the estate an alert email and proves nothing new.
+if [ "${SITE_CONTRACT_SKIP:-0}" != "1" ] && command -v node >/dev/null 2>&1; then
+  if ! node "$(git rev-parse --show-toplevel)/scripts/check-manifest.mjs" >/dev/null 2>&1; then
+    echo -e "${red}✗ Push blocked:${nc} site-manifest.json does not match the working tree."
+    echo    "  Regenerate and commit it:  node scripts/generate-manifest.mjs"
+    echo    "  Full detail:               node scripts/check-manifest.mjs"
+    exit 1
+  fi
+fi
+
 echo -e "${green}✓ pre-push checks passed${nc}"
 
 # Release-notes guard — managed policy, hand-merged because this repo owns its
