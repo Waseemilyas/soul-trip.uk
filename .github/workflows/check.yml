@@ -75,7 +75,7 @@ jobs:
       # exactly what the legacy branch build published. Uploading the root keeps
       # the public surface byte-identical to what is live today; narrowing it
       # would be a change to the site, smuggled in as a change to CI.
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: .
 
@@ -95,7 +95,7 @@ jobs:
       cancel-in-progress: false
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
   verify-production:
     needs: deploy
