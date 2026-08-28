@@ -20,7 +20,12 @@ export function isServedPath(relPath) {
 // custom domain and does not serve it (measured HTTP 404 in production), so a
 // fingerprint entry for it could never be verified against live output.
 // Exact-name matching keeps every other served runtime file fingerprinted.
-export const FINGERPRINT_EXCLUDED_FILES = ["CHANGELOG.md", "CNAME"];
+// VISION.md is the repo's authority-0 document (estate convention: every repo
+// carries one at its root, written by the board, amended by the board). It is
+// prose about the project, not a runtime dependency of any page, and it lands
+// without a manifest regeneration -- the 2026-08-28 council ratification sweep
+// turned the site-contract gate red on main for exactly that reason.
+export const FINGERPRINT_EXCLUDED_FILES = ["CHANGELOG.md", "CNAME", "VISION.md"];
 
 export function isFingerprintExcluded(relPath) {
   return FINGERPRINT_EXCLUDED_FILES.includes(relPath);

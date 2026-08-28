@@ -40,7 +40,7 @@
     "scripts/check-sentry-integration.mjs": "abcb4c07337d0144c8af97cc6c97c80cde660e4b76ee8237cf7b99808b6e470b",
     "scripts/check-site.mjs": "bb18340ff9d6eabb07c4e85f50a212a80d4cef27729a4832c71bdcb8621ff280",
     "scripts/generate-manifest.mjs": "0467d404152b7e9b4491da9924161380f7ca4a4c59ecf3b84ad696feb3cac513",
-    "scripts/site-contract-lib.mjs": "ca04a23c4c07d462b10a03d744e82e8e5049f463a35132cd01e520e3f53d156b",
+    "scripts/site-contract-lib.mjs": "d5cb3b9fafbec7f0c904817d177def59006e08198cd319d71e4eae728042759a",
     "scripts/test-negative-controls.mjs": "c89153dd439713a3f3720b3c05db53687e008de03ba9a073f66bcbd980f8ccdb",
     "scripts/verify-production.mjs": "031d87418f443dc42f36b065a28e0ed37ab2705ab9bb7006ab06fb202e4ae6cd",
     "sitemap.xml": "498f6ecdc4b253762167269fdc7daf3229931f6ed30b452a740b5de71faf266d"
