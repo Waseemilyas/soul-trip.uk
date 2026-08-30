@@ -13,9 +13,39 @@ function argValue(flag) {
   return i !== -1 && i + 1 < process.argv.length ? process.argv[i + 1] : undefined;
 }
 
+// Statuses a CDN edge can produce transiently for a single asset while every
+// sibling serves fine. Observed in production on 2026-08-29: GitHub Pages
+// returned one 503 for images/business/saudi-pavilion-trade-show.jpg while the
+// manifest and all other files verified green in the same run, and the asset
+// served 200 again seconds later. With one attempt per file, that single edge
+// hiccup turned the whole uptime run red — a false alarm.
+const TRANSIENT_STATUSES = new Set([408, 425, 429, 500, 502, 503, 504]);
+const MAX_ATTEMPTS = 3;
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function fetchBytes(url) {
-  const res = await fetch(url, { method: "GET", redirect: "follow", signal: AbortSignal.timeout(20000) });
-  return { status: res.status, body: Buffer.from(await res.arrayBuffer()) };
+  // Retry only transient statuses and network/timeout errors, with bounded
+  // backoff. 4xx and content-hash mismatches stay hard, immediate failures —
+  // a retry must never mask a file that is genuinely missing or wrong.
+  let lastError;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      const res = await fetch(url, { method: "GET", redirect: "follow", signal: AbortSignal.timeout(20000) });
+      const body = Buffer.from(await res.arrayBuffer());
+      if (TRANSIENT_STATUSES.has(res.status) && attempt < MAX_ATTEMPTS) {
+        await sleep(500 * attempt);
+        continue;
+      }
+      return { status: res.status, body };
+    } catch (error) {
+      lastError = error;
+      if (attempt < MAX_ATTEMPTS) await sleep(500 * attempt);
+    }
+  }
+  throw lastError;
 }
 
 export async function verifyOrigin(base, expectedManifestBytes, log) {

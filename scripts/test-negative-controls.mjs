@@ -933,6 +933,92 @@ await test("T46", "hostile: a manifest that still lists CNAME fails with the exp
   }
 });
 
+// ===== Transient-edge retry controls (T47-T48) =====================================
+// 2026-08-29: the uptime workflow went red on a single GitHub Pages edge 503 for
+// one asset while the manifest and every sibling verified green — a false alarm.
+// The verifier now retries transient statuses; these controls prove both directions:
+// a flapping asset must NOT fail the run, and a persistently failing asset MUST.
+
+await test("T47", "resilience: an asset that 503s twice then serves 200 is absorbed by the retry — run stays green", async () => {
+  const dir = await makeCopy("soultrip-negctl-flap-");
+  let server;
+  try {
+    const flapRel = "assets/js/main.js";
+    let flapHits = 0;
+    const requestCounts = new Map();
+    server = http.createServer(async (req, res) => {
+      try {
+        const rel = decodeURIComponent(new URL(req.url, "http://localhost").pathname).replace(/^\/+/, "") || "index.html";
+        requestCounts.set(rel, (requestCounts.get(rel) ?? 0) + 1);
+        if (rel === flapRel && flapHits < 2) {
+          flapHits++;
+          res.writeHead(503);
+          res.end("edge hiccup");
+          return;
+        }
+        res.writeHead(200);
+        res.end(await readFile(path.join(dir, rel)));
+      } catch {
+        if (!res.headersSent) {
+          res.writeHead(404);
+          res.end("nf");
+        }
+      }
+    });
+    await new Promise((r) => server.listen(0, "127.0.0.1", r));
+    const port = server.address().port;
+    const r = await runNodeAsync("scripts/verify-production.mjs", dir, ["--base", `http://127.0.0.1:${port}/`, "--root", dir]);
+    return {
+      pass: r.status === 0 && flapHits === 2 && requestCounts.get(flapRel) === 3,
+      evidence:
+        r.status !== 0
+          ? `verifier failed against a merely flapping origin: ${(r.stdout + r.stderr).slice(0, 300)}`
+          : `flapping asset fetched ${requestCounts.get(flapRel)}x (2 transient 503s absorbed), run green`
+    };
+  } finally {
+    if (server) await new Promise((resolve) => server.close(resolve));
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+await test("T48", "hostile: an asset that 503s on every attempt still fails, naming the asset — retry never masks a persistent failure", async () => {
+  const dir = await makeCopy("soultrip-negctl-dead-");
+  let server;
+  try {
+    const deadRel = "assets/css/styles.css";
+    let deadHits = 0;
+    server = http.createServer(async (req, res) => {
+      try {
+        const rel = decodeURIComponent(new URL(req.url, "http://localhost").pathname).replace(/^\/+/, "") || "index.html";
+        if (rel === deadRel) {
+          deadHits++;
+          res.writeHead(503);
+          res.end("edge down");
+          return;
+        }
+        res.writeHead(200);
+        res.end(await readFile(path.join(dir, rel)));
+      } catch {
+        if (!res.headersSent) {
+          res.writeHead(404);
+          res.end("nf");
+        }
+      }
+    });
+    await new Promise((r) => server.listen(0, "127.0.0.1", r));
+    const port = server.address().port;
+    const r = await runNodeAsync("scripts/verify-production.mjs", dir, ["--base", `http://127.0.0.1:${port}/`, "--root", dir]);
+    const out = r.stdout + r.stderr;
+    return {
+      pass: r.status === 1 && deadHits === 3 && out.includes(`"${deadRel}" is not served correctly (HTTP 503)`),
+      evidence: `exit=${r.status}, dead asset attempted ${deadHits}x before failing, diagnostic names it: ${out.includes(deadRel)}`
+    };
+  } finally {
+    if (server) await new Promise((resolve) => server.close(resolve));
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
 console.log("\nnegative-control suite results:");
 let failures = 0;
 for (const r of results) {

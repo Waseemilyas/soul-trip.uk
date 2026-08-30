@@ -240,7 +240,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   height: 70px;
 }
 .nav.is-scrolled .brand__name { color: var(--emerald-900); }
-.nav.is-scrolled .brand__sub { color: var(--gold-500); }
+.nav.is-scrolled .brand__sub { color: var(--gold-700); }
 .nav.is-scrolled .nav__link { color: var(--ink-900); }
 .nav.is-scrolled .nav__link:hover { color: var(--emerald-900); }
 
@@ -1030,7 +1030,7 @@ html.js-anim .reveal.is-in { opacity: 1; transform: none; }
   .nav.is-open .nav__links { opacity: 1; visibility: visible; transform: none; }
   .nav.is-open { background: var(--white); box-shadow: 0 4px 20px rgba(11,61,46,0.08); }
   .nav.is-open .brand__name { color: var(--emerald-900); }
-  .nav.is-open .brand__sub { color: var(--gold-500); }
+  .nav.is-open .brand__sub { color: var(--gold-700); }
   .nav.is-open .nav__toggle { color: var(--emerald-900); }
   .nav__link {
     color: var(--ink-900);

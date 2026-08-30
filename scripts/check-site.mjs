@@ -387,6 +387,7 @@ if (css !== null) {
     { label: "eyebrow accent on white", fg: "var(--gold-700)", bg: "var(--white)", min: 4.5 },
     { label: "eyebrow accent on sand-100 section", fg: "var(--gold-700)", bg: "var(--sand-100)", min: 4.5 },
     { label: "eyebrow accent on sand-200 section", fg: "var(--gold-700)", bg: "var(--sand-200)", min: 4.5 },
+    { label: "scrolled-nav brand sub on white", fg: literalFromCss("\\.nav\\.is-scrolled \\.brand__sub", "color"), bg: "var(--white)", min: 4.5 },
     { label: "service chip text", fg: "var(--emerald-700)", bg: "var(--sand-100)", min: 4.5 },
     { label: "primary button label", fg: "var(--emerald-900)", bg: "var(--gold-500)", min: 4.5 },
     { label: "primary button label on hover fill", fg: "var(--emerald-900)", bg: "var(--gold-300)", min: 4.5 },
