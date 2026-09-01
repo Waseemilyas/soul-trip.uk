@@ -1,5 +1,18 @@
 # Release notes
 
+## v2026.09.01.1 — 1 September 2026
+
+### Visual improvements
+
+- Travel images now match the destinations and descriptions shown with them.
+- The hotels section now features a Riyadh night skyline.
+- The site now presents a focused set of travel content without internal visual reference boards.
+
+### Navigation
+
+- The opened navigation menu has clearer contrast, making its links easier to read.
+
+
 ## v2026.08.27.1 — 27 August 2026
 
 The Soul Trip website is ready for your next visit.
